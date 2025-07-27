@@ -1,32 +1,84 @@
-version: '3.5'
 services:
-  pgsql:
-    image: oroinc/pgsql:13.7-1-alpine
-    ports: ['5432']
-    labels:
-      com.symfony.server.service-prefix: ORO_DB
-    environment:
-      POSTGRES_USER: oro_db_user
-      POSTGRES_DB: oro_db
-      POSTGRES_PASSWORD: oro_db_pass
-      POSTGRES_ROOT_PASSWORD: oro_db_pass
+  # === SERWIS: NGINX (Serwer WWW) ===
+  # Używa oficjalnego obrazu Nginx i naszej własnej konfiguracji.
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: orostore-nginx
+    ports:
+      # Mapuje port 80 Twojego komputera (localhost) na port 80 w kontenerze.
+      - "80:80"
+    depends_on:
+      - php-fpm
     volumes:
-      - postgres:/var/lib/postgresql/data
+      # 1. Mapowanie Twojego lokalnego kodu źródłowego.
+      - ./:/var/www/html:delegated
+      # 2. Mapowanie Twojego pliku konfiguracyjnego Nginx.
+      #    Upewnij się, że plik docker/nginx/default.conf istnieje!
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+
+  # === SERWIS: PHP-FPM ===
+  # Ten serwis będzie budowany z naszego własnego Dockerfile.
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: orostore-php-fpm
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      # Mapowanie Twojego lokalnego kodu źródłowego.
+      - ./:/var/www/html:delegated
+    environment:
+      # Zmienne środowiskowe dla aplikacji, aby mogła połączyć się z innymi usługami.
+      # Nazwy usług (pgsql, redis) odpowiadają nazwom kluczy w tym pliku.
+      # Wartości domyślne są pobierane z pliku .env
+      ORO_DB_HOST: pgsql
+      ORO_DB_PORT: 5432
+      ORO_DB_NAME: ${ORO_DB_NAME:-oro_db}
+      ORO_DB_USER: ${ORO_DB_USER:-oro_db_user}
+      ORO_DB_PASSWORD: ${ORO_DB_PASSWORD:-oro_db_pass}
+      ORO_REDIS_HOST: redis
+      ORO_REDIS_PORT: 6379
+      ORO_MAILER_HOST: mailcatcher
+      ORO_MAILER_PORT: 1025
+    restart: unless-stopped
+
+  # === SERWIS: BAZA DANYCH POSTGRESQL ===
+  pgsql:
+    image: postgres:13-alpine # Używamy oficjalnego obrazu postgres
+    container_name: orostore-db
+    environment:
+      POSTGRES_DB: ${ORO_DB_NAME:-oro_db}
+      POSTGRES_USER: ${ORO_DB_USER:-oro_db_user}
+      POSTGRES_PASSWORD: ${ORO_DB_PASSWORD:-oro_db_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: "pg_isready -U$${POSTGRES_USER} -d$${POSTGRES_DB}"
+      test: "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
       interval: 5s
       timeout: 30s
       start_period: 40s
-    restart: on-failure
+    restart: unless-stopped
+
+  # === SERWIS: REDIS (Cache, Sesje) ===
   redis:
-    image: redis:6-alpine
-    ports: ["6379"]
-    labels:
-      com.symfony.server.service-prefix: ORO_REDIS
+    image: redis:7-alpine
+    container_name: orostore-redis
+    restart: unless-stopped
+
+  # === SERWIS: MAILCATCHER (Przechwytywanie maili) ===
   mailcatcher:
     image: schickling/mailcatcher
-    ports: ['1025', '1080']
-    labels:
-      com.symfony.server.service-prefix: ORO_MAILER
+    container_name: orostore-mailcatcher
+    ports:
+      # Wystawiamy port 1080, aby mieć dostęp do interfejsu webowego z Windows.
+      - "1080:1080"
+    restart: unless-stopped
+
+# Definicja woluminu dla trwałości danych bazy danych.
 volumes:
-  postgres: {}
+  postgres_data: {}
