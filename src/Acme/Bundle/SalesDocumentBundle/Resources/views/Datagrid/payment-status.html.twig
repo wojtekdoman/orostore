@@ -1,0 +1,9 @@
+{% set statusMapping = {
+    'paid': 'success',
+    'unpaid': 'destructive',
+    'partially_paid': 'warning'
+} %}
+
+<span class="status-label{% if statusMapping[record.getValue('paymentStatus')] is defined %} status-label--{{ statusMapping[record.getValue('paymentStatus')] }}{% endif %}">
+    {{ ('acme.sales_document.payment_status.' ~ record.getValue('paymentStatus'))|trans }}
+</span>

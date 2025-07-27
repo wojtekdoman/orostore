@@ -1,0 +1,6 @@
+acme_sales_document_frontend:
+    resource: "@AcmeSalesDocumentBundle/Controller/Frontend"
+    type: attribute
+    prefix: /sales-documents
+    options:
+        frontend: true

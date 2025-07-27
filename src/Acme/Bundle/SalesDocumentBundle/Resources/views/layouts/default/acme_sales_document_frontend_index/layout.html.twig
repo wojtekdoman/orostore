@@ -1,0 +1,16 @@
+{% block sales_documents_container_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': ' sales-documents-grid-container'
+    }) %}
+    <div {{ block('block_attributes') }}>
+        <div class="customer-content">
+            <div class="customer-content__header">
+                <h1 class="customer-content__header-title">{{ 'acme.sales_document.page_title'|trans }}</h1>
+            </div>
+            <div class="customer-content__description">
+                <p>{{ 'acme.sales_document.info_text'|trans }}</p>
+            </div>
+            {{ block_widget(block) }}
+        </div>
+    </div>
+{% endblock %}

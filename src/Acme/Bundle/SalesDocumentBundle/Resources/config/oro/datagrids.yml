@@ -1,0 +1,57 @@
+datagrids:
+    frontend-sales-documents-grid:
+        acl_resource: acme_sales_document_frontend_view
+        source:
+            type: orm
+            query:
+                select:
+                    - doc.id
+                    - doc.documentNumber
+                    - doc.documentType
+                    - doc.documentDate
+                    - doc.amount
+                    - doc.currency
+                    - doc.erpId
+                    - IDENTITY(doc.customerUser) as customer_user_id
+                from:
+                    - { table: Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument, alias: doc }
+        columns:
+            documentNumber:
+                label: acme.sales_document.document_number.label
+            documentType:
+                label: acme.sales_document.document_type.label
+            documentDate:
+                label: acme.sales_document.document_date.label
+                frontend_type: date
+            amount:
+                label: acme.sales_document.amount.label
+        properties:
+            id: ~
+            download_link:
+                type: url
+                route: acme_frontend_sales_document_download
+                params:
+                    id: id
+        actions:
+            download:
+                type: navigate
+                label: acme.sales_document.action.download
+                icon: download
+                link: download_link
+                rowAction: false
+        sorters:
+            columns:
+                documentNumber:
+                    data_name: doc.documentNumber
+                documentDate:
+                    data_name: doc.documentDate
+                amount:
+                    data_name: doc.amount
+            default:
+                documentDate: DESC
+        options:
+            frontend: true
+            toolbarOptions:
+                hide: false
+                pageSize:
+                    items: [10, 25, 50]

@@ -1,0 +1,30 @@
+layout:
+    imports:
+        -
+            id: oro_customer_page
+
+    actions:
+        - '@setBlockTheme':
+              themes: 'layout.html.twig'
+        - '@setOption':
+              id: page_title_text
+              optionName: text
+              optionValue:
+                  label: 'acme.sales_document.page_title'
+                  parameters: []
+        - '@setOption':
+              id: customer_datagrid_toolbar_mass_actions
+              optionName: visible
+              optionValue: false
+        - '@add':
+              id: sales_documents_info
+              parentId: page_main_content
+              blockType: text
+              options:
+                  text: 'acme.sales_document.info_text'
+        - '@add':
+              id: sales_documents_grid
+              parentId: page_main_content
+              blockType: datagrid
+              options:
+                  grid_name: frontend-sales-documents-grid

@@ -1,0 +1,27 @@
+layout:
+    imports:
+        -
+            id: oro_customer_page
+        -
+            id: acme_sales_document_grid
+            root: sales_documents_container
+            namespace: sales_documents
+
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeSalesDocument/layouts/default/acme_sales_document_frontend_index/layout.html.twig'
+
+        - '@setOption':
+            id: page_title
+            optionName: defaultValue
+            optionValue: 'acme.sales_document.page_title'
+
+        - '@setOption':
+            id: page_content
+            optionName: class_prefix
+            optionValue: 'sales-documents'
+
+        - '@add':
+            id: sales_documents_container
+            parentId: page_content
+            blockType: container

@@ -1,0 +1,20 @@
+acls:
+    # Backend entity permissions - these will show in the admin role management
+    Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument:
+        label: acme.salesdocument.entity_label
+        type: entity
+        group_name: commerce
+        category: orders
+        
+    # Frontend action permissions - these will show as capabilities in customer user role management
+    acme_sales_document_frontend_view:
+        label: acme.salesdocument.security.permission.view
+        type: action
+        group_name: "commerce"
+        category: "orders"
+        
+    acme_sales_document_frontend_download:
+        label: acme.salesdocument.security.permission.download
+        type: action
+        group_name: "commerce"
+        category: "orders"

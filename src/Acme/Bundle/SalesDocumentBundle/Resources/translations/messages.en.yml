@@ -1,0 +1,131 @@
+acme:
+    sales_document:
+        entity_label: 'Sales Document'
+        entity_plural_label: 'Sales Documents'
+        page_title: 'Sales Documents'
+        info_text: 'Here you can find all documents related to your orders. Click the "Download" button to download the document in PDF format.'
+    salesdocument:
+        entity_label: 'Sales Document'
+        entity_plural_label: 'Sales Documents'
+        security:
+            permission:
+                view: 'View Sales Documents'
+                download: 'Download Sales Documents'
+        
+        menu:
+            sales_documents: 'Sales Documents'
+            sales_documents.description: 'View and download sales documents'
+            quick_access: 'Sales Documents'
+            quick_access.description: 'Quick access to sales documents'
+        
+        action:
+            download: 'Download'
+            
+        acl:
+            view_sales_documents: 'View sales documents'
+            download_sales_document: 'Download sales documents'
+            frontend:
+                view: 'View Sales Documents'
+                download: 'Download Sales Documents'
+            
+        grid:
+            no_documents: 'No documents to display'
+            
+        invoice_attachment:
+            label: 'Invoice PDF'
+            
+        document_number:
+            label: 'Document Number'
+            
+        document_type:
+            label: 'Document Type'
+            
+        document_date:
+            label: 'Document Date'
+            
+        amount:
+            label: 'Amount'
+            
+        due_date:
+            label: 'Due Date'
+            
+        amount_paid:
+            label: 'Amount Paid'
+            
+        balance_due:
+            label: 'Balance Due'
+            
+        payment_status:
+            label: 'Payment Status'
+            paid: 'Paid'
+            unpaid: 'Unpaid'
+            partially_paid: 'Partially Paid'
+            
+        due_date_status:
+            label: 'Due Date Status'
+            overdue: 'Overdue'
+            not_overdue: 'Not Overdue'
+            
+        type:
+            invoice: 'Invoice'
+            credit_note: 'Credit Note'
+            receipt: 'Receipt'
+            other: 'Other'
+            
+        filters:
+            documentNumber: 'Document Number'
+            documentType: 'Document Type'
+            documentDate: 'Document Date'
+            amount: 'Amount'
+            dueDate: 'Due Date'
+            amountPaid: 'Amount Paid'
+            
+        dashboard:
+            unpaid_amount: 'Unpaid Invoices'
+            widget:
+                latest_documents: 'My Latest Documents'
+                unpaid_invoices: 'Unpaid Invoices'
+
+# Flat keys for direct access (Oro style) - must use quotes for keys with dots
+"acme.salesdocument.entity_label": 'Sales Document'
+"acme.salesdocument.entity_plural_label": 'Sales Documents'
+"acme.salesdocument.security.permission.view": 'View Sales Documents'
+"acme.salesdocument.security.permission.download": 'Download Sales Documents'
+"acme.sales_document.menu.sales_documents": 'Sales Documents'
+"acme.sales_document.menu.sales_documents.description": 'View and download sales documents'
+"acme.sales_document.menu.quick_access": 'Sales Documents'
+"acme.sales_document.menu.quick_access.description": 'Quick access to sales documents'
+"acme.salesdocument.dashboard.widget.latest_documents": 'My Latest Documents'
+"acme.salesdocument.dashboard.widget.unpaid_invoices": 'Unpaid Invoices'
+"acme.salesdocument.dashboard.widget.my_latest_documents": 'My Latest Documents'
+"acme.salesdocument.datagrid.documents_plural": '{0} No documents|{1} 1 document|]1,Inf[ %count% documents'
+"acme.salesdocument.dashboard.scorecard.unpaid_invoices.label": 'Unpaid Invoices'
+"acme.salesdocument.dashboard.scorecard.balance.label": 'Balance'
+"acme.salesdocument.dashboard.scorecard.overdue.label": 'Overdue'
+
+# Datagrid column labels
+"acme.sales_document.document_number.label": 'Document Number'
+"acme.sales_document.document_type.label": 'Document Type'
+"acme.sales_document.document_date.label": 'Document Date'
+"acme.sales_document.amount.label": 'Amount'
+"acme.sales_document.due_date.label": 'Due Date'
+"acme.sales_document.amount_paid.label": 'Amount Paid'
+"acme.sales_document.balance_due.label": 'Balance Due'
+"acme.sales_document.payment_status.label": 'Payment Status'
+"acme.sales_document.due_date_status.label": 'Due Date Status'
+"acme.sales_document.action.download": 'Download'
+
+# Payment status choices
+"acme.sales_document.payment_status.paid": 'Paid'
+"acme.sales_document.payment_status.unpaid": 'Unpaid'
+"acme.sales_document.payment_status.partially_paid": 'Partially Paid'
+
+# Due date status choices
+"acme.sales_document.due_date_status.overdue": 'Overdue'
+"acme.sales_document.due_date_status.not_overdue": 'Not Overdue'
+
+# Document type choices
+"acme.sales_document.type.invoice": 'Invoice'
+"acme.sales_document.type.credit_note": 'Credit Note'
+"acme.sales_document.type.receipt": 'Receipt'
+"acme.sales_document.type.other": 'Other'

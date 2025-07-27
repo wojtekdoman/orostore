@@ -1,0 +1,8 @@
+{% set statusMapping = {
+    'overdue': 'destructive',
+    'not_overdue': 'success'
+} %}
+
+<span class="status-label{% if statusMapping[record.getValue('dueDateStatus')] is defined %} status-label--{{ statusMapping[record.getValue('dueDateStatus')] }}{% endif %}">
+    {{ ('acme.sales_document.due_date_status.' ~ record.getValue('dueDateStatus'))|trans }}
+</span>

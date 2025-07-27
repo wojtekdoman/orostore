@@ -1,0 +1,280 @@
+datagrids:
+    frontend-customer-dashboard-my-sales-documents-grid:
+        extends: frontend-customer-dashboard-no-filter-base-grid
+        acl_resource: acme_sales_document_frontend_view
+        source:
+            type: orm
+            query:
+                select:
+                    - doc.id
+                    - doc.documentNumber
+                    - doc.documentType  
+                    - doc.documentDate
+                    - doc.amount
+                    - doc.currency
+                    - CONCAT(customerUser.firstName, ' ', customerUser.lastName) as customerUserName
+                join:
+                    left:
+                        - { join: doc.customerUser, alias: customerUser }
+                from:
+                    - { table: Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument, alias: doc }
+                orderBy:
+                    - column: doc.documentDate
+                      dir: DESC
+        columns:
+            documentNumber:
+                label: acme.sales_document.document_number.label
+            documentType:
+                label: acme.sales_document.document_type.label
+            documentDate:
+                label: acme.sales_document.document_date.label
+                frontend_type: date
+            amount:
+                label: acme.sales_document.amount.label
+                frontend_type: currency
+        properties:
+            id: ~
+            view_link:
+                type: url
+                route: acme_sales_document_frontend_view
+                params:
+                    - id
+            download_link:
+                type: url
+                route: acme_sales_document_frontend_download
+                params:
+                    - id
+        actions:
+            download:
+                type: navigate
+                label: acme.sales_document.action.download
+                icon: download
+                link: download_link
+                rowAction: true
+        filters:
+            columns:
+                customerUserName:
+                    type: string
+                    data_name: customerUserName
+                    enabled: false
+        views_list: '@oro_customer.datagrid.current_customer_user_view_list'
+
+    frontend-customer-dashboard-unpaid-invoices-grid:
+        extends: frontend-customer-dashboard-no-filter-base-grid
+        acl_resource: acme_sales_document_frontend_view
+        source:
+            type: orm
+            query:
+                select:
+                    - doc.id
+                    - doc.documentNumber
+                    - doc.documentDate
+                    - doc.dueDate
+                    - doc.amount
+                    - doc.currency
+                    - (doc.amount - COALESCE(doc.amountPaid, 0)) as balanceDue
+                    - CONCAT(customerUser.firstName, ' ', customerUser.lastName) as customerUserName
+                join:
+                    left:
+                        - { join: doc.customerUser, alias: customerUser }
+                from:
+                    - { table: Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument, alias: doc }
+                where:
+                    and:
+                        - doc.documentType = 'invoice'
+                        - (doc.amountPaid IS NULL OR doc.amountPaid < doc.amount)
+                orderBy:
+                    - column: doc.dueDate
+                      dir: ASC
+        columns:
+            documentNumber:
+                label: acme.sales_document.document_number.label
+            documentDate:
+                label: acme.sales_document.document_date.label
+                frontend_type: date
+            dueDate:
+                label: acme.sales_document.due_date.label
+                frontend_type: date
+            balanceDue:
+                label: acme.sales_document.balance_due.label
+                frontend_type: currency
+        properties:
+            id: ~
+            view_link:
+                type: url
+                route: acme_sales_document_frontend_view
+                params:
+                    - id
+        filters:
+            columns:
+                customerUserName:
+                    type: string
+                    data_name: customerUserName
+                    enabled: false
+        views_list: '@oro_customer.datagrid.current_customer_user_view_list'
+
+    frontend-sales-documents-grid:
+        acl_resource: acme_sales_document_frontend_view
+        source:
+            type: orm
+            query:
+                select:
+                    - doc.id
+                    - doc.documentNumber
+                    - doc.documentType
+                    - doc.documentDate
+                    - doc.amount
+                    - doc.currency
+                    - doc.dueDate
+                    - doc.amountPaid
+                    - doc.erpId
+                    - (doc.amount - COALESCE(doc.amountPaid, 0)) as balanceDue
+                    - |
+                        CASE 
+                            WHEN doc.amountPaid IS NULL OR doc.amountPaid = 0 THEN 'unpaid'
+                            WHEN doc.amountPaid >= doc.amount THEN 'paid'
+                            ELSE 'partially_paid'
+                        END as paymentStatus
+                    - |
+                        CASE 
+                            WHEN doc.dueDate < CURRENT_DATE() THEN 'overdue'
+                            ELSE 'not_overdue'
+                        END as dueDateStatus
+                from:
+                    - { table: Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument, alias: doc }
+        columns:
+            documentNumber:
+                label: acme.sales_document.document_number.label
+            documentType:
+                label: acme.sales_document.document_type.label
+            documentDate:
+                label: acme.sales_document.document_date.label
+                frontend_type: date
+            amount:
+                label: acme.sales_document.amount.label
+                frontend_type: currency
+            dueDate:
+                label: acme.sales_document.due_date.label
+                frontend_type: date
+            amountPaid:
+                label: acme.sales_document.amount_paid.label
+                frontend_type: currency
+            balanceDue:
+                label: acme.sales_document.balance_due.label
+                frontend_type: currency
+            paymentStatus:
+                label: acme.sales_document.payment_status.label
+                type: twig
+                frontend_type: html
+                template: '@AcmeSalesDocument/Datagrid/payment-status.html.twig'
+            dueDateStatus:
+                label: acme.sales_document.due_date_status.label
+                type: twig
+                frontend_type: html
+                template: '@AcmeSalesDocument/Datagrid/due-date-status.html.twig'
+        properties:
+            id: ~
+            view_link:
+                type: url
+                route: acme_sales_document_frontend_view
+                params:
+                    id: id
+            download_link:
+                type: url
+                route: acme_sales_document_frontend_download
+                params:
+                    id: id
+        actions:
+            view:
+                type: navigate
+                label: oro.grid.action.view
+                icon: eye
+                link: view_link
+                rowAction: true
+                target: _blank
+            download:
+                type: navigate
+                label: acme.sales_document.action.download
+                icon: download
+                link: download_link
+                rowAction: true
+        sorters:
+            columns:
+                documentNumber:
+                    data_name: doc.documentNumber
+                documentDate:
+                    data_name: doc.documentDate
+                amount:
+                    data_name: doc.amount
+                dueDate:
+                    data_name: doc.dueDate
+                amountPaid:
+                    data_name: doc.amountPaid
+                balanceDue:
+                    data_name: balanceDue
+                paymentStatus:
+                    data_name: paymentStatus
+                dueDateStatus:
+                    data_name: dueDateStatus
+            default:
+                documentDate: DESC
+        filters:
+            columns:
+                documentNumber:
+                    type: string
+                    data_name: doc.documentNumber
+                documentType:
+                    type: choice
+                    data_name: doc.documentType
+                    options:
+                        field_options:
+                            choices:
+                                acme.sales_document.type.invoice: invoice
+                                acme.sales_document.type.credit_note: credit_note
+                                acme.sales_document.type.receipt: receipt
+                                acme.sales_document.type.other: other
+                            translatable_options: true
+                            multiple: true
+                documentDate:
+                    type: date
+                    data_name: doc.documentDate
+                amount:
+                    type: currency
+                    data_name: doc.amount
+                dueDate:
+                    type: date
+                    data_name: doc.dueDate
+                    renderable: false
+                amountPaid:
+                    type: currency
+                    data_name: doc.amountPaid
+                    renderable: false
+                balanceDue:
+                    type: currency
+                    data_name: balanceDue
+                    renderable: false
+                paymentStatus:
+                    type: choice
+                    data_name: paymentStatus
+                    options:
+                        field_options:
+                            choices:
+                                acme.sales_document.payment_status.paid: paid
+                                acme.sales_document.payment_status.unpaid: unpaid
+                                acme.sales_document.payment_status.partially_paid: partially_paid
+                            multiple: true
+                dueDateStatus:
+                    type: choice
+                    data_name: dueDateStatus
+                    options:
+                        field_options:
+                            choices:
+                                acme.sales_document.due_date_status.overdue: overdue
+                                acme.sales_document.due_date_status.not_overdue: not_overdue
+                            multiple: true
+        options:
+            frontend: true
+            toolbarOptions:
+                hide: false
+                pageSize:
+                    items: [10, 25, 50]

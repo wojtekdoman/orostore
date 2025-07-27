@@ -1,0 +1,7 @@
+my-latest-documents:
+    name: 'my-latest-documents'
+    type: customer_dashboard_datagrid
+    label: 'My Latest Documents'
+    settings:
+        datagrid: frontend-customer-dashboard-my-sales-documents-grid
+        viewAll: acme_frontend_sales_document_index

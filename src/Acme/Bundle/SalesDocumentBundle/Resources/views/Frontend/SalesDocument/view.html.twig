@@ -1,0 +1,44 @@
+{% extends '@OroCustomerPortal/templates/default.html.twig' %}
+{% import '@OroUI/macros.html.twig' as UI %}
+
+{% block page_title_text %}{{ salesDocument.documentNumber }}{% endblock %}
+
+{% block content %}
+<div class="customer-content">
+    <div class="customer-content__header">
+        <h1 class="customer-content__header-title">{{ salesDocument.documentNumber }}</h1>
+    </div>
+    
+    <div class="grid">
+        <div class="grid__column grid__column--6">
+            <dl class="customer-info">
+                <dt>{{ 'acme.salesdocument.document_type.label'|trans }}</dt>
+                <dd>{{ salesDocument.documentType }}</dd>
+                
+                <dt>{{ 'acme.salesdocument.document_date.label'|trans }}</dt>
+                <dd>{{ salesDocument.documentDate|oro_format_date }}</dd>
+                
+                <dt>{{ 'acme.salesdocument.amount.label'|trans }}</dt>
+                <dd>{{ salesDocument.amount|oro_format_currency({'currency': salesDocument.currency}) }}</dd>
+                
+                {% if salesDocument.dueDate %}
+                <dt>{{ 'acme.salesdocument.due_date.label'|trans }}</dt>
+                <dd>{{ salesDocument.dueDate|oro_format_date }}</dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+    
+    <div class="customer-content__actions">
+        <a href="{{ path('acme_frontend_sales_document_download', {'id': salesDocument.id}) }}" 
+           class="btn btn--info btn--size-m">
+            <span class="btn__icon"><i class="fa-download"></i></span>
+            {{ 'acme.salesdocument.action.download'|trans }}
+        </a>
+        <a href="{{ path('acme_frontend_sales_document_index') }}" 
+           class="btn btn--default btn--size-m">
+            {{ 'oro.ui.back'|trans }}
+        </a>
+    </div>
+</div>
+{% endblock %}

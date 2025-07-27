@@ -1,0 +1,4 @@
+bundles:
+    - Acme\Bundle\SalesDocumentBundle\AcmeSalesDocumentBundle
+
+priority: 200

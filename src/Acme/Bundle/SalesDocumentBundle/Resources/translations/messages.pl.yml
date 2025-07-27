@@ -1,0 +1,67 @@
+acme:
+    sales_document:
+        page_title: 'Dokumenty Sprzedaży'
+        info_text: 'Tutaj znajdziesz wszystkie dokumenty związane z Twoimi zamówieniami. Kliknij przycisk "Pobierz", aby pobrać dokument w formacie PDF.'
+        
+        menu:
+            sales_documents: 'Dokumenty Sprzedaży'
+            sales_documents.description: 'Przeglądaj i pobieraj dokumenty sprzedaży'
+        
+        action:
+            download: 'Pobierz'
+            
+        acl:
+            view_sales_documents: 'Przeglądaj dokumenty sprzedaży'
+            download_sales_document: 'Pobieraj dokumenty sprzedaży'
+            
+        grid:
+            no_documents: 'Brak dokumentów do wyświetlenia'
+            
+        invoice_attachment:
+            label: 'Faktura PDF'
+            
+        document_number:
+            label: 'Numer dokumentu'
+            
+        document_type:
+            label: 'Typ dokumentu'
+            
+        document_date:
+            label: 'Data dokumentu'
+            
+        amount:
+            label: 'Kwota'
+            
+        due_date:
+            label: 'Termin płatności'
+            
+        amount_paid:
+            label: 'Zapłacono'
+            
+        balance_due:
+            label: 'Do zapłaty'
+            
+        payment_status:
+            label: 'Status płatności'
+            paid: 'Zapłacone'
+            unpaid: 'Niezapłacone'
+            partially_paid: 'Częściowo zapłacone'
+            
+        due_date_status:
+            label: 'Status terminu'
+            overdue: 'Po terminie'
+            not_overdue: 'W terminie'
+            
+        type:
+            invoice: 'Faktura'
+            credit_note: 'Korekta'  
+            receipt: 'Paragon'
+            other: 'Inny'
+            
+        filters:
+            documentNumber: 'Numer dokumentu'
+            documentType: 'Typ dokumentu'
+            documentDate: 'Data dokumentu'
+            amount: 'Kwota'
+            dueDate: 'Termin płatności'
+            amountPaid: 'Zapłacono'

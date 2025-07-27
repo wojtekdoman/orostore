@@ -1,0 +1,5 @@
+oro_entity:
+    entity_aliases:
+        Acme\Bundle\SalesDocumentBundle\Entity\SalesDocument:
+            alias: acme_sales_document
+            plural_alias: acme_sales_documents

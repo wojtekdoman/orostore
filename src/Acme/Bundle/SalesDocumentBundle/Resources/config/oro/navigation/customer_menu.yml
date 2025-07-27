@@ -1,0 +1,13 @@
+menu_config:
+    items:
+        customer_sales_documents:
+            label: 'acme.sales_document.menu.sales_documents'
+            route: 'acme_sales_document_frontend_index'
+            extras:
+                position: 40
+                description: 'acme.sales_document.menu.sales_documents.description'
+
+    tree:
+        oro_customer_menu:
+            children:
+                customer_sales_documents: ~

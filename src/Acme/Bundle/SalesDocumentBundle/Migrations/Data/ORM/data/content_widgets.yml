@@ -1,0 +1,17 @@
+my-latest-documents:
+    name: 'my-latest-documents'
+    type: customer_dashboard_datagrid
+    label: 'acme.salesdocument.dashboard.widget.latest_documents'
+    themeConfigOption: customer_user_dashboard__content_widget_sales_documents
+    settings:
+        datagrid: frontend-customer-dashboard-my-sales-documents-grid
+        viewAll: acme_sales_document_frontend_index
+
+unpaid-invoices-datagrid:
+    name: 'unpaid-invoices-datagrid'
+    type: customer_dashboard_datagrid
+    label: 'acme.salesdocument.dashboard.widget.unpaid_invoices'
+    themeConfigOption: customer_user_dashboard__content_widget_unpaid_invoices
+    settings:
+        datagrid: frontend-customer-dashboard-unpaid-invoices-grid
+        viewAll: acme_sales_document_frontend_index

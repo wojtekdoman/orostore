@@ -1,0 +1,63 @@
+navigation:
+    menu_config:
+        items:
+            # Główna pozycja w menu
+            acme_sales_document_frontend_index:
+                label: 'acme.sales_document.menu.sales_documents'
+                route: 'acme_sales_document_frontend_index'
+                position: 75  # Pozycja między Order History (70) a Previously Purchased (80)
+                extras:
+                    description: 'acme.sales_document.menu.sales_documents.description'
+                    routes:
+                        - 'acme_sales_document_frontend_index'
+                        - 'acme_sales_document_frontend_download'
+                        - 'acme_sales_document_frontend_view'
+                        
+            # Quick access shortcut (Option C)
+            acme_sales_document_quick_access:
+                label: 'acme.sales_document.menu.quick_access'
+                route: 'acme_sales_document_frontend_index'
+                position: 120
+                extras:
+                    description: 'acme.sales_document.menu.quick_access.description'
+                    icon: 'fa-file-text-o'
+                        
+        tree:
+            # Dodanie do menu frontendu
+            frontend_menu:
+                children:
+                    oro_customer_menu_customer_user_index:
+                        children:
+                            acme_sales_document_frontend_index:
+                                children:
+                                    acme_sales_document_frontend_download: ~
+                                    acme_sales_document_frontend_view: ~
+                                    
+            # Dla zgodności z Default Theme 50/51
+            oro_customer_menu:
+                children:
+                    acme_sales_document_frontend_index:
+                        children:
+                            acme_sales_document_frontend_download: ~
+                            acme_sales_document_frontend_view: ~
+                            
+            # Dla nowego motywu refreshing_teal (v6.0+)
+            oro_customer_menu_refreshing_teal:
+                children:
+                    oro_order_frontend_orders:
+                        children:
+                            acme_sales_document_frontend_index:
+                                children:
+                                    acme_sales_document_frontend_download: ~
+                                    acme_sales_document_frontend_view: ~
+                                    
+            # Quick access shortcuts menu
+            oro_quick_access_menu:
+                children:
+                    acme_sales_document_quick_access: ~
+                    
+            # Dashboard quick access menu (blok 1 na dashboardzie)
+            oro_customer_dashboard_quick_access_menu:
+                children:
+                    acme_sales_document_quick_access:
+                        merge_strategy: append

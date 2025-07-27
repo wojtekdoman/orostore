@@ -1,0 +1,19 @@
+layout:
+    imports:
+        -
+            id: datagrid
+            root: __root
+
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeSalesDocument/layouts/default/imports/acme_sales_document_grid/layout.html.twig'
+
+        - '@setOption':
+            id: __datagrid
+            optionName: grid_name
+            optionValue: frontend-sales-documents-grid
+
+        - '@setOption':
+            id: __datagrid_toolbar_button_container
+            optionName: visible
+            optionValue: true
