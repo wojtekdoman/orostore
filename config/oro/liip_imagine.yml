@@ -1,0 +1,41 @@
+liip_imagine:
+    filter_sets:
+        # Define product image filters with proper WebP support
+        product_large:
+            quality: 85
+            filters:
+                thumbnail: { size: [600, 600], mode: inset }
+        
+        product_large_webp:
+            quality: 80
+            format: webp
+            filters:
+                thumbnail: { size: [600, 600], mode: inset }
+            
+        product_medium:
+            quality: 85
+            filters:
+                thumbnail: { size: [400, 400], mode: inset }
+                
+        product_medium_webp:
+            quality: 80
+            format: webp
+            filters:
+                thumbnail: { size: [400, 400], mode: inset }
+                
+        product_small:
+            quality: 85
+            filters:
+                thumbnail: { size: [200, 200], mode: inset }
+                
+        product_small_webp:
+            quality: 80
+            format: webp
+            filters:
+                thumbnail: { size: [200, 200], mode: inset }
+
+        # Existing WYSIWYG filter
+        wysiwyg_original:
+            quality: 95
+            filters: []
+            post_processors: []
