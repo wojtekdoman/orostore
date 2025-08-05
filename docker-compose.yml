@@ -5,8 +5,8 @@ services:
     image: nginx:1.27-alpine
     container_name: orostore-nginx
     ports:
-      # Mapuje port 80 Twojego komputera (localhost) na port 80 w kontenerze.
-      - "80:80"
+      # Mapuje port 81 Twojego komputera (localhost) na port 80 w kontenerze.
+      - "81:80"
     depends_on:
       - php-fpm
     volumes:
