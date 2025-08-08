@@ -16,6 +16,7 @@ RUN apk add --no-cache \
     libpng-dev \
     jpeg-dev \
     freetype-dev \
+    libwebp-dev \
     postgresql-dev \
     libxml2-dev \
     icu-dev \
@@ -24,7 +25,7 @@ RUN apk add --no-cache \
 
 # Krok 3: Konfigurujemy i instalujemy rozszerzenia PHP
 # Usunięto 'imap' z tej listy
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
     pdo_pgsql \
     gd \
