@@ -1,0 +1,132 @@
+datagrids:
+    acme-cg-inventory-grid:
+        acl_resource: acme_cg_inventory_view
+        source:
+            type: orm
+            query:
+                select:
+                    - i.id
+                    - i.quantity
+                    - i.inventoryStatus
+                    - i.isActive
+                    - i.updatedAt
+                    - p.sku as productSku
+                    - CONCAT(p.sku, ' - ', p.denormalizedDefaultName) as productName
+                    - cg.name as customerGroupName
+                    - w.name as websiteName
+                from:
+                    - { table: 'Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory', alias: i }
+                join:
+                    left:
+                        - { join: i.product, alias: p }
+                        - { join: i.customerGroup, alias: cg }
+                        - { join: i.website, alias: w }
+        columns:
+            productSku:
+                label: oro.product.sku.label
+            productName:
+                label: oro.product.names.label
+            customerGroupName:
+                label: oro.customer.customergroup.entity_label
+            websiteName:
+                label: oro.website.entity_label
+            quantity:
+                label: acme.cginventory.quantity.label
+                frontend_type: decimal
+            inventoryStatus:
+                label: acme.cginventory.status.label
+                type: twig
+                template: '@AcmeCustomerGroupInventory/Datagrid/status.html.twig'
+                frontend_type: html
+            isActive:
+                label: acme.cginventory.is_active.label
+                frontend_type: boolean
+            updatedAt:
+                label: oro.ui.updated_at
+                frontend_type: datetime
+        properties:
+            id: ~
+            update_link:
+                type: url
+                route: acme_cg_inventory_update
+                params: [ id ]
+            delete_link:
+                type: url
+                route: acme_cg_inventory_delete
+                params: [ id ]
+        actions:
+            update:
+                type: navigate
+                label: oro.grid.action.update
+                link: update_link
+                icon: pencil-square-o
+                acl_resource: acme_cg_inventory_edit
+            delete:
+                type: delete
+                label: oro.grid.action.delete
+                link: delete_link
+                icon: trash-o
+                acl_resource: acme_cg_inventory_delete
+        sorters:
+            columns:
+                productSku:
+                    data_name: productSku
+                productName:
+                    data_name: productName
+                customerGroupName:
+                    data_name: customerGroupName
+                websiteName:
+                    data_name: websiteName
+                quantity:
+                    data_name: i.quantity
+                inventoryStatus:
+                    data_name: i.inventoryStatus
+                isActive:
+                    data_name: i.isActive
+                updatedAt:
+                    data_name: i.updatedAt
+            default:
+                updatedAt: DESC
+        filters:
+            columns:
+                productSku:
+                    type: string
+                    data_name: p.sku
+                productName:
+                    type: string
+                    data_name: p.denormalizedDefaultName
+                customerGroupName:
+                    type: entity
+                    data_name: i.customerGroup
+                    options:
+                        field_options:
+                            class: 'Oro\Bundle\CustomerBundle\Entity\CustomerGroup'
+                websiteName:
+                    type: entity
+                    data_name: i.website
+                    options:
+                        field_options:
+                            class: 'Oro\Bundle\WebsiteBundle\Entity\Website'
+                quantity:
+                    type: number-range
+                    data_name: i.quantity
+                inventoryStatus:
+                    type: choice
+                    data_name: i.inventoryStatus
+                    options:
+                        field_options:
+                            choices:
+                                acme.cginventory.status.in_stock: in_stock
+                                acme.cginventory.status.out_of_stock: out_of_stock
+                                acme.cginventory.status.backorder: backorder
+                                acme.cginventory.status.pre_order: pre_order
+                isActive:
+                    type: boolean
+                    data_name: i.isActive
+                updatedAt:
+                    type: datetime
+                    data_name: i.updatedAt
+        options:
+            entityHint: 'Customer Group Inventory'
+            entity_pagination: true
+            export: true

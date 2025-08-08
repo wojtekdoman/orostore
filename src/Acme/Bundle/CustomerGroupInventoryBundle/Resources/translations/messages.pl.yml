@@ -1,0 +1,52 @@
+acme:
+    cginventory:
+        entity_label: 'Stan magazynowy grupy klientów'
+        entity_plural_label: 'Stany magazynowe grup klientów'
+        
+        menu:
+            label: 'Stany magazynowe grup'
+            description: 'Zarządzaj stanami magazynowymi dla grup klientów'
+        
+        sections:
+            general: 'Informacje ogólne'
+        
+        product:
+            label: 'Produkt'
+            placeholder: 'Wybierz produkt...'
+        
+        customer_group:
+            label: 'Grupa klientów'
+            placeholder: 'Wybierz grupę klientów...'
+        
+        website:
+            label: 'Witryna'
+            placeholder: 'Wszystkie witryny'
+        
+        quantity:
+            label: 'Ilość'
+        
+        status:
+            label: 'Status magazynowy'
+            in_stock: 'Dostępny'
+            out_of_stock: 'Niedostępny'
+            backorder: 'Na zamówienie'
+            pre_order: 'Przedsprzedaż'
+        
+        is_active:
+            label: 'Aktywny'
+        
+        collection:
+            label: 'Stany magazynowe grup klientów'
+        
+        saved: 'Stan magazynowy grupy klientów został zapisany'
+        
+        create:
+            title: 'Utwórz stan magazynowy grupy klientów'
+        
+        update:
+            title: 'Edytuj stan magazynowy grupy klientów'
+        
+        frontend:
+            group_specific: 'Stan dla Twojej grupy: %group%'
+            quantity_available: 'Dostępne: %qty% sztuk'
+            not_available: 'Ten produkt nie jest dostępny dla Twojej grupy klientów'

@@ -1,0 +1,30 @@
+layout:
+    imports:
+        -
+            id: acme_cg_inventory_data
+            root: page_content
+            namespace: acme_cg_inventory
+
+    actions:
+        - '@setBlockTheme':
+            themes:
+                - '@AcmeCustomerGroupInventory/layouts/default/oro_product_frontend_product_view/widgets/customer_group_inventory.html.twig'
+
+        - '@add':
+            id: acme_cg_inventory_status
+            parentId: product_view_primary_wrapper
+            blockType: container
+            options:
+                attr:
+                    class: 'acme-cg-inventory-status'
+            siblingId: ~
+            prepend: false
+
+        - '@add':
+            id: acme_cg_inventory_status_content
+            parentId: acme_cg_inventory_status
+            blockType: block
+            options:
+                vars:
+                    product: '=data["product_view"].getProduct()'
+                    inventory: '=data["acme_cg_inventory"].getForProduct(data["product_view"].getProduct())'

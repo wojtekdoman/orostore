@@ -1,0 +1,36 @@
+Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [product, customerGroup, website]
+            message: 'An inventory entry already exists for this combination of product, customer group, and website.'
+            errorPath: customerGroup
+    
+    properties:
+        product:
+            - NotNull:
+                message: 'Product is required'
+        
+        customerGroup:
+            - NotNull:
+                message: 'Customer group is required'
+        
+        organization:
+            - NotNull:
+                message: 'Organization is required'
+        
+        quantity:
+            - NotNull:
+                message: 'Quantity is required'
+            - GreaterThanOrEqual:
+                value: 0
+                message: 'Quantity must be greater than or equal to 0'
+            - Type:
+                type: numeric
+                message: 'Quantity must be a number'
+        
+        inventoryStatus:
+            - NotBlank:
+                message: 'Inventory status is required'
+            - Choice:
+                choices: [in_stock, out_of_stock, backorder, pre_order]
+                message: 'Invalid inventory status'

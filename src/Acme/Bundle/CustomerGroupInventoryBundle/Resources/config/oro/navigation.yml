@@ -1,0 +1,23 @@
+menu_config:
+    items:
+        acme_cg_inventory_list:
+            label: 'acme.cginventory.menu.label'
+            route: 'acme_cg_inventory_index'
+            extras:
+                routes: ['acme_cg_inventory_*']
+                description: 'acme.cginventory.menu.description'
+            aclResourceId: 'acme_cg_inventory_view'
+
+    tree:
+        application_menu:
+            children:
+                products_tab:
+                    children:
+                        acme_cg_inventory_list:
+                            position: 250
+
+navigation:
+    titles:
+        acme_cg_inventory_index: ~
+        acme_cg_inventory_create: 'acme.cginventory.create.title'
+        acme_cg_inventory_update: 'acme.cginventory.update.title'

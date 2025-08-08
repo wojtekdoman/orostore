@@ -1,0 +1,4 @@
+acme_cg_inventory:
+    resource: '@AcmeCustomerGroupInventoryBundle/Controller'
+    type: annotation
+    prefix: /admin/customer-group-inventory

@@ -1,0 +1,31 @@
+acme_cg_inventory_view:
+    type: entity
+    class: Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory
+    permission: VIEW
+    label: 'View customer group inventory'
+    group_name: ''
+    category: 'catalog'
+
+acme_cg_inventory_create:
+    type: entity
+    class: Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory
+    permission: CREATE
+    label: 'Create customer group inventory'
+    group_name: ''
+    category: 'catalog'
+
+acme_cg_inventory_edit:
+    type: entity
+    class: Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory
+    permission: EDIT
+    label: 'Edit customer group inventory'
+    group_name: ''
+    category: 'catalog'
+
+acme_cg_inventory_delete:
+    type: entity
+    class: Acme\Bundle\CustomerGroupInventoryBundle\Entity\CustomerGroupInventory
+    permission: DELETE
+    label: 'Delete customer group inventory'
+    group_name: ''
+    category: 'catalog'

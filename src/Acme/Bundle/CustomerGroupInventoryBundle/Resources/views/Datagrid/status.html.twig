@@ -1,0 +1,3 @@
+<span class="badge badge-{{ value == 'in_stock' ? 'success' : value == 'out_of_stock' ? 'danger' : 'warning' }}">
+    {{ ('acme.cginventory.status.' ~ value)|trans }}
+</span>

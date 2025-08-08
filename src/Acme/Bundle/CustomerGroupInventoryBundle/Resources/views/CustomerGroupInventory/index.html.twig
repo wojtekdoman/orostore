@@ -1,0 +1,16 @@
+{% extends '@OroUI/actions/index.html.twig' %}
+{% import '@OroUI/macros.html.twig' as UI %}
+
+{% set gridName = 'acme-cg-inventory-grid' %}
+{% set pageTitle = 'acme.cginventory.entity_plural_label'|trans %}
+
+{% block navButtons %}
+    {% if is_granted('acme_cg_inventory_create') %}
+        <div class="btn-group">
+            {{ UI.addButton({
+                'path': path('acme_cg_inventory_create'),
+                'entity_label': 'acme.cginventory.entity_label'|trans
+            }) }}
+        </div>
+    {% endif %}
+{% endblock navButtons %}

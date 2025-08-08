@@ -1,0 +1,52 @@
+acme:
+    cginventory:
+        entity_label: 'Customer Group Inventory'
+        entity_plural_label: 'Customer Group Inventories'
+        
+        menu:
+            label: 'Customer Group Inventory'
+            description: 'Manage inventory levels per customer group'
+        
+        sections:
+            general: 'General Information'
+        
+        product:
+            label: 'Product'
+            placeholder: 'Choose a product...'
+        
+        customer_group:
+            label: 'Customer Group'
+            placeholder: 'Choose a customer group...'
+        
+        website:
+            label: 'Website'
+            placeholder: 'All Websites'
+        
+        quantity:
+            label: 'Quantity'
+        
+        status:
+            label: 'Inventory Status'
+            in_stock: 'In Stock'
+            out_of_stock: 'Out of Stock'
+            backorder: 'Backorder'
+            pre_order: 'Pre-order'
+        
+        is_active:
+            label: 'Active'
+        
+        collection:
+            label: 'Customer Group Inventories'
+        
+        saved: 'Customer group inventory has been saved'
+        
+        create:
+            title: 'Create Customer Group Inventory'
+        
+        update:
+            title: 'Edit Customer Group Inventory'
+        
+        frontend:
+            group_specific: 'Price for your group: %group%'
+            quantity_available: '%qty% available'
+            not_available: 'This product is not available for your customer group'

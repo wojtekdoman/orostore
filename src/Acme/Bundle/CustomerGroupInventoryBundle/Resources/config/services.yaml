@@ -1,0 +1,64 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: false
+
+    # Auto-configure all bundle classes
+    Acme\Bundle\CustomerGroupInventoryBundle\:
+        resource: '../../*'
+        exclude:
+            - '../../{Entity,Resources,Migrations,Tests}'
+            - '../../DependencyInjection/Configuration.php'
+
+
+    # Providers
+    Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider:
+        public: true
+        arguments:
+            - '@doctrine'
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupContextResolver'
+            - '@oro_website.manager'
+            - '@?cache.app'
+
+    Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupContextResolver:
+        arguments:
+            - '@security.token_storage'
+
+    # Event subscribers
+    Acme\Bundle\CustomerGroupInventoryBundle\EventSubscriber\InventoryCacheInvalidationSubscriber:
+        arguments:
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    # Controller
+    Acme\Bundle\CustomerGroupInventoryBundle\Controller\CustomerGroupInventoryController:
+        autowire: false
+        autoconfigure: false
+        arguments:
+            - '@doctrine'
+            - '@oro_security.token_accessor'
+        tags: ['controller.service_arguments']
+        public: true
+        calls:
+            - [setContainer, ['@service_container']]
+
+    # Form types
+    Acme\Bundle\CustomerGroupInventoryBundle\Form\Type\CustomerGroupInventoryType:
+        tags:
+            - { name: form.type }
+
+    Acme\Bundle\CustomerGroupInventoryBundle\Form\Extension\ProductTypeExtension:
+        arguments:
+            - '@doctrine'
+        tags:
+            - { name: form.type_extension, extended_type: 'Oro\Bundle\ProductBundle\Form\Type\ProductType' }
+
+    # Layout data provider
+    acme.cg_inventory.layout_data_provider:
+        class: Acme\Bundle\CustomerGroupInventoryBundle\Layout\DataProvider\CustomerGroupInventoryDataProvider
+        arguments:
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+        tags:
+            - { name: layout.data_provider, alias: acme_cg_inventory }

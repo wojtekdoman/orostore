@@ -1,0 +1,95 @@
+{% block _acme_cg_inventory_status_content_widget %}
+    {% set inventory = inventory|default(null) %}
+    {% if inventory %}
+        <div class="acme-cg-inventory-widget {{ inventory.overriddenByGroup ? 'is-group-specific' : 'is-default' }}">
+            {% if inventory.overriddenByGroup %}
+                <div class="acme-cg-inventory-widget__group-notice">
+                    <i class="fa fa-users"></i>
+                    <span>{{ 'acme.cginventory.frontend.group_specific'|trans({'%group%': inventory.groupName}) }}</span>
+                </div>
+            {% endif %}
+            
+            <div class="acme-cg-inventory-widget__status">
+                <span class="acme-cg-inventory-widget__status-label 
+                    acme-cg-inventory-widget__status-label--{{ inventory.status }}">
+                    {{ inventory.statusLabel|trans }}
+                </span>
+                
+                {% if inventory.quantity and inventory.isInStock %}
+                    <span class="acme-cg-inventory-widget__quantity">
+                        {{ 'acme.cginventory.frontend.quantity_available'|trans({'%qty%': inventory.quantity|number_format(0) }) }}
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if not inventory.isAvailable %}
+                <div class="acme-cg-inventory-widget__unavailable">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    {{ 'acme.cginventory.frontend.not_available'|trans }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block _acme_cg_inventory_status_content_style %}
+    <style type="text/css">
+        .acme-cg-inventory-widget {
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+        
+        .acme-cg-inventory-widget.is-group-specific {
+            background: #f0f8ff;
+            border-color: #4a90e2;
+        }
+        
+        .acme-cg-inventory-widget__group-notice {
+            color: #4a90e2;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .acme-cg-inventory-widget__status-label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .acme-cg-inventory-widget__status-label--in_stock {
+            background: #5cb85c;
+            color: white;
+        }
+        
+        .acme-cg-inventory-widget__status-label--out_of_stock {
+            background: #d9534f;
+            color: white;
+        }
+        
+        .acme-cg-inventory-widget__status-label--backorder {
+            background: #f0ad4e;
+            color: white;
+        }
+        
+        .acme-cg-inventory-widget__status-label--pre_order {
+            background: #5bc0de;
+            color: white;
+        }
+        
+        .acme-cg-inventory-widget__quantity {
+            margin-left: 10px;
+            color: #666;
+        }
+        
+        .acme-cg-inventory-widget__unavailable {
+            margin-top: 10px;
+            color: #d9534f;
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
