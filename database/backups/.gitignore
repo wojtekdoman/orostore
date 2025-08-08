@@ -3,4 +3,4 @@
 *.sql.gz
 
 # But track this .gitignore file
-!.gitignore
+!.gitignore*.tar.gz
