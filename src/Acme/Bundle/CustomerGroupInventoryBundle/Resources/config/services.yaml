@@ -10,6 +10,11 @@ services:
         exclude:
             - '../../{Entity,Resources,Migrations,Tests}'
             - '../../DependencyInjection/Configuration.php'
+    
+    # Repository service
+    Acme\Bundle\CustomerGroupInventoryBundle\Entity\Repository\CustomerGroupInventoryRepository:
+        tags:
+            - { name: doctrine.repository_service }
 
 
     # Providers
@@ -24,6 +29,7 @@ services:
     Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupContextResolver:
         arguments:
             - '@security.token_storage'
+            - '@oro_customer.provider.customer_user_relations_provider'
 
     # Event subscribers
     Acme\Bundle\CustomerGroupInventoryBundle\EventSubscriber\InventoryCacheInvalidationSubscriber:

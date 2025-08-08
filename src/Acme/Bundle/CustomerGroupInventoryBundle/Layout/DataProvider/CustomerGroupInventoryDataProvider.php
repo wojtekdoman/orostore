@@ -21,7 +21,21 @@ class CustomerGroupInventoryDataProvider
      */
     public function getForProduct(Product $product, ?Website $website = null): ResolvedInventory
     {
-        return $this->provider->getResolvedInventory($product, $website);
+        error_log('=== DataProvider::getForProduct START ===');
+        error_log('Product SKU: ' . $product->getSku());
+        error_log('Website: ' . ($website ? $website->getName() : 'NULL'));
+        
+        $result = $this->provider->getResolvedInventory($product, $website);
+        
+        error_log('Result status: ' . $result->status);
+        error_log('Result label: ' . $result->getStatusLabel());
+        error_log('Result available: ' . ($result->isAvailable() ? 'YES' : 'NO'));
+        error_log('Result overridden: ' . ($result->overriddenByGroup ? 'YES' : 'NO'));
+        error_log('Result group: ' . ($result->groupName ?: 'NULL'));
+        error_log('Result quantity: ' . ($result->quantity ?: 'NULL'));
+        error_log('=== DataProvider::getForProduct END ===');
+        
+        return $result;
     }
 
     /**

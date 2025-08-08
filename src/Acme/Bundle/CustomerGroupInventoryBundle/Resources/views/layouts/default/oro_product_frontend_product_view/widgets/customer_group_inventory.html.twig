@@ -1,3 +1,9 @@
+{% block _acme_debug_marker_widget %}
+    <div id="acme-debug-marker" style="background: yellow; padding: 10px; font-weight: bold;">
+        ACME LAYOUT LOADED - {{ block.vars.text|default('NO TEXT') }}
+    </div>
+{% endblock %}
+
 {% block _acme_cg_inventory_status_content_widget %}
     {% set inventory = inventory|default(null) %}
     {% if inventory %}

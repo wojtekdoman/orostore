@@ -34,25 +34,27 @@ class CustomerGroupInventoryRepository extends ServiceEntityRepository
             ->setParameter('active', true)
             ->setMaxResults(1);
 
-        // Try to find exact match with website first
         if ($website) {
-            $qbWithWebsite = clone $qb;
-            $result = $qbWithWebsite
-                ->andWhere('i.website = :website')
-                ->setParameter('website', $website)
-                ->getQuery()
-                ->getOneOrNullResult();
-            
-            if ($result) {
-                return $result;
-            }
+            $qb->andWhere('i.website = :website OR i.website IS NULL')
+               ->setParameter('website', $website)
+               ->addSelect('(CASE WHEN i.website = :website THEN 0 ELSE 1 END) AS HIDDEN website_priority')
+               ->orderBy('website_priority', 'ASC');
+        } else {
+            $qb->andWhere('i.website IS NULL');
         }
 
-        // Fallback to record without website (global)
-        return $qb
-            ->andWhere('i.website IS NULL')
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+    
+    /**
+     * Alias for backward compatibility
+     */
+    public function findOneByProductAndGroup(
+        Product $product,
+        CustomerGroup $customerGroup,
+        ?Website $website = null
+    ): ?CustomerGroupInventory {
+        return $this->findOneFor($product, $customerGroup, $website);
     }
 
     /**

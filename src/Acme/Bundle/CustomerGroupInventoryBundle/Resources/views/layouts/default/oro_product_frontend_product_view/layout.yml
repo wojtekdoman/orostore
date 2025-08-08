@@ -1,24 +1,38 @@
 layout:
-    imports:
-        -
-            id: acme_cg_inventory_data
-            root: page_content
-            namespace: acme_cg_inventory
-
     actions:
         - '@setBlockTheme':
-            themes:
-                - '@AcmeCustomerGroupInventory/layouts/default/oro_product_frontend_product_view/widgets/customer_group_inventory.html.twig'
+            themes: '@AcmeCustomerGroupInventory/layouts/default/oro_product_frontend_product_view/widgets/customer_group_inventory.html.twig'
+        
+        # DEBUG MARKER - TEMPORARY
+        - '@add':
+            id: acme_debug_marker
+            parentId: product_view_specification_container
+            blockType: block
+            options:
+                vars:
+                    text: 'ACME LAYOUT LOADED'
 
+        # Usuń widgety InventoryBundle (low stock / upcoming). Jeśli któryś ID nie istnieje,
+        # skasuj odpowiedni blok @remove po weryfikacji w Layout toolbar.
+        - '@remove':
+            id: low_inventory_label
+        - '@remove':
+            id: upcoming_label
+        # Opcjonalnie (jeśli masz domyślny status w osobnym bloku):
+        - '@remove':
+            id: product_inventory_status
+        - '@remove':
+            id: availability_label
+
+        # Dodaj nasz status w tym samym kontenerze co widgety Inventory
         - '@add':
             id: acme_cg_inventory_status
-            parentId: product_view_primary_wrapper
+            parentId: product_view_specification_container
             blockType: container
             options:
                 attr:
-                    class: 'acme-cg-inventory-status'
-            siblingId: ~
-            prepend: false
+                    class: 'customer-group-inventory-status'
+            prepend: true
 
         - '@add':
             id: acme_cg_inventory_status_content
@@ -26,5 +40,4 @@ layout:
             blockType: block
             options:
                 vars:
-                    product: '=data["product_view"].getProduct()'
-                    inventory: '=data["acme_cg_inventory"].getForProduct(data["product_view"].getProduct())'
+                    inventory: '=data["acme_cg_inventory"].getForProduct(data["product"])'
