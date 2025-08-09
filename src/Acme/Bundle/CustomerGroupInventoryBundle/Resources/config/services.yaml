@@ -80,6 +80,15 @@ services:
         tags:
             - { name: twig.extension }
     
+    # Autocomplete decorator for search bar
+    Acme\Bundle\CustomerGroupInventoryBundle\Autocomplete\SearchAutocompleteDecorator:
+        decorates: oro_product.provider.product_autocomplete
+        decoration_priority: -10
+        arguments:
+            - '@.inner'
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+            - '@doctrine'
+    
     # Shopping list datagrid listener - DISABLED due to hanging issue
     # Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListDatagridListener:
     #     arguments:
