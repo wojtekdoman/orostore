@@ -25,17 +25,34 @@ class CustomerGroupContextResolver
         // Get the logged-in customer user from token storage
         $customerUser = null;
         $token = $this->tokenStorage->getToken();
+        
+        // Enhanced logging for debugging
+        error_log('=== CustomerGroupContextResolver Debug ===');
+        error_log('Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'N/A'));
+        error_log('Cookie BAPID: ' . ($_COOKIE['BAPID'] ?? 'NOT SET'));
+        error_log('Cookie OROSFID: ' . ($_COOKIE['OROSFID'] ?? 'NOT SET'));
+        error_log('Cookie OROSFRM: ' . ($_COOKIE['OROSFRM'] ?? 'NOT SET'));
         error_log('Token exists: ' . ($token ? 'YES' : 'NO'));
+        
         if ($token) {
             error_log('Token class: ' . get_class($token));
+            // Different token types have different methods
+            if (method_exists($token, 'isAuthenticated')) {
+                error_log('Token authenticated: ' . ($token->isAuthenticated() ? 'YES' : 'NO'));
+            } else {
+                // For Symfony 6+ tokens don't have isAuthenticated method
+                error_log('Token authenticated: ' . (null !== $token->getUser() ? 'YES' : 'NO'));
+            }
             $user = $token->getUser();
             error_log('User type: ' . (is_object($user) ? get_class($user) : gettype($user)));
             if ($user instanceof CustomerUser) {
                 $customerUser = $user;
+                error_log('CustomerUser found! Email: ' . $customerUser->getEmail());
             } else {
                 error_log('User is not a CustomerUser instance');
             }
         }
+        error_log('=== End Debug ===');
         
         if ($customerUser instanceof CustomerUser) {
             // Use the relations provider to get the customer group

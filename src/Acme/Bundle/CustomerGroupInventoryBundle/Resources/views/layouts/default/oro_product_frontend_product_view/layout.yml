@@ -12,17 +12,12 @@ layout:
                 vars:
                     text: 'ACME LAYOUT LOADED'
 
-        # Usuń widgety InventoryBundle (low stock / upcoming). Jeśli któryś ID nie istnieje,
-        # skasuj odpowiedni blok @remove po weryfikacji w Layout toolbar.
+        # Usuń domyślny blok inventory status
         - '@remove':
-            id: low_inventory_label
+            id: product_view_headline_inventory_status_slot
+        # Usuń również blok w brand section jeśli istnieje
         - '@remove':
-            id: upcoming_label
-        # Opcjonalnie (jeśli masz domyślny status w osobnym bloku):
-        - '@remove':
-            id: product_inventory_status
-        - '@remove':
-            id: availability_label
+            id: product_view_brand_inventory_status
 
         # Dodaj nasz status w tym samym kontenerze co widgety Inventory
         - '@add':

@@ -29,3 +29,12 @@ monolog:
 oro_message_queue:
     client:
         traceable_producer: true
+
+# Frontend session configuration
+oro_frontend:
+    session:
+        name: OROSFID
+        cookie_path: '/'
+        cookie_httponly: true
+        cookie_secure: false  # false for local dev with http
+        cookie_samesite: lax
