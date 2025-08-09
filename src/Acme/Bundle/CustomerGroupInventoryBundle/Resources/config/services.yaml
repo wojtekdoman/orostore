@@ -69,3 +69,10 @@ services:
             - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
         tags:
             - { name: layout.data_provider, alias: acme_cg_inventory }
+    
+    # Twig extension
+    Acme\Bundle\CustomerGroupInventoryBundle\Twig\CustomerGroupInventoryExtension:
+        arguments:
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+        tags:
+            - { name: twig.extension }

@@ -20,7 +20,3 @@ layout:
             id: __acme_cg_inventory_status_label
             parentId: __acme_cg_inventory_status
             blockType: block
-            options:
-                vars:
-                    product: '=product'
-                    inventory: '=data["acme_cg_inventory"].getForProduct(product)'

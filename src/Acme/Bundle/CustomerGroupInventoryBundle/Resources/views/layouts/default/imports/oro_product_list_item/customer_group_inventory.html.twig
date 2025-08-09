@@ -1,18 +1,29 @@
-{% block ___acme_cg_inventory_status_label_widget %}
-    {% set inventory = block.vars.inventory|default(null) %}
-    {% if inventory %}
-        <div class="product-item__inventory">
-            {% if inventory.status == 'in_stock' %}
-                <span class="badge badge--success badge--xs">{{ 'In Stock'|trans }}</span>
-            {% elseif inventory.status == 'out_of_stock' %}
-                <span class="badge badge--danger badge--xs">{{ 'Out of Stock'|trans }}</span>
-            {% elseif inventory.status == 'backorder' %}
-                <span class="badge badge--warning badge--xs">{{ 'Backorder'|trans }}</span>
-            {% elseif inventory.status == 'pre_order' %}
-                <span class="badge badge--info badge--xs">{{ 'Pre-order'|trans }}</span>
-            {% else %}
-                <span class="badge badge--xs">{{ inventory.status|replace({'_': ' '})|title|trans }}</span>
-            {% endif %}
-        </div>
+{% block __oro_product_list_item__acme_cg_inventory_status_label_widget %}
+    {# Product can be an object or an array depending on context #}
+    {% if product is defined %}
+        {# Check if we can get inventory status #}
+        {% if product is iterable and product.product is defined %}
+            {% set actualProduct = product.product %}
+        {% else %}
+            {% set actualProduct = product %}
+        {% endif %}
+        
+        {% if actualProduct %}
+            {% set status = acme_cg_inventory_status(actualProduct) %}
+            {% set label = acme_cg_inventory_label(actualProduct) %}
+            <div class="product-item__inventory">
+                {% if status == 'in_stock' %}
+                    <span class="badge badge--success badge--xs">{{ label|trans }}</span>
+                {% elseif status == 'out_of_stock' %}
+                    <span class="badge badge--danger badge--xs">{{ label|trans }}</span>
+                {% elseif status == 'backorder' %}
+                    <span class="badge badge--warning badge--xs">{{ label|trans }}</span>
+                {% elseif status == 'pre_order' %}
+                    <span class="badge badge--info badge--xs">{{ label|trans }}</span>
+                {% else %}
+                    <span class="badge badge--xs">{{ label|trans }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

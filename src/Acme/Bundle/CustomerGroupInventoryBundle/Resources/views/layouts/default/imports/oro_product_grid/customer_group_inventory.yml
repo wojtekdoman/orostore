@@ -10,7 +10,3 @@ layout:
             siblingId: __product_item_primary_content_first_line
             prepend: false
             blockType: block
-            options:
-                vars:
-                    product: '=product'
-                    inventory: '=data["acme_cg_inventory"].getForProduct(product)'
