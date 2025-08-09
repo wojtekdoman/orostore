@@ -89,11 +89,11 @@ services:
             - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
             - '@doctrine'
     
-    # Shopping list datagrid listener - DISABLED due to hanging issue
-    # Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListDatagridListener:
+    # Shopping list grid listener - DISABLED for now
+    # Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListGridListener:
     #     arguments:
     #         - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
     #         - '@doctrine'
+    #         - '@?logger'
     #     tags:
-    #         - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.before, method: onBuildBefore }
-    #         - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.after, method: onResultAfter }
+    #         - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.after, method: onOrmResultAfter, priority: -100 }
