@@ -11,6 +11,7 @@
         {% if actualProduct %}
             {% set status = acme_cg_inventory_status(actualProduct) %}
             {% set label = acme_cg_inventory_label(actualProduct) %}
+            
             <div class="product-item__inventory">
                 {% if status == 'in_stock' %}
                     <span class="badge badge--success badge--xs">{{ label|trans }}</span>

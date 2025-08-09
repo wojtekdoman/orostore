@@ -30,6 +30,8 @@ services:
         arguments:
             - '@security.token_storage'
             - '@oro_customer.provider.customer_user_relations_provider'
+            - '@request_stack'
+            - '@oro_security.token_accessor'
 
     # Event subscribers
     Acme\Bundle\CustomerGroupInventoryBundle\EventSubscriber\InventoryCacheInvalidationSubscriber:
@@ -74,5 +76,6 @@ services:
     Acme\Bundle\CustomerGroupInventoryBundle\Twig\CustomerGroupInventoryExtension:
         arguments:
             - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+            - '@doctrine'
         tags:
             - { name: twig.extension }

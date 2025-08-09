@@ -41,6 +41,7 @@ class CustomerGroupInventoryProvider
     {
         $website = $website ?: $this->websiteManager->getCurrentWebsite();
         $group = $this->contextResolver->getCurrentCustomerGroup();
+        
 
         // Build cache key
         $key = $this->getCacheKey($product, $group, $website);
@@ -64,7 +65,9 @@ class CustomerGroupInventoryProvider
 
         // Store in caches
         $this->localCache[$key] = $inventory;
+        
         if ($this->cache) {
+            $cacheItem = $this->cache->getItem($key);
             $cacheItem->set($inventory);
             $cacheItem->expiresAfter(3600); // 1 hour
             $this->cache->save($cacheItem);
@@ -78,17 +81,11 @@ class CustomerGroupInventoryProvider
      */
     private function resolveInventory(Product $product, $group, ?Website $website): ResolvedInventory
     {
-        error_log('CustomerGroupInventoryProvider: Resolving for product SKU: ' . $product->getSku());
-        error_log('CustomerGroupInventoryProvider: Group: ' . ($group ? $group->getName() : 'NULL'));
-        error_log('CustomerGroupInventoryProvider: Website: ' . ($website ? $website->getName() : 'NULL'));
-        
         // Find override for customer group
         if ($group) {
             $override = $this->getRepository()->findOneFor($product, $group, $website);
-            error_log('CustomerGroupInventoryProvider: Override found: ' . ($override ? 'YES' : 'NO'));
             
             if ($override && $override->getIsActive()) {
-                error_log('CustomerGroupInventoryProvider: Using override with status: ' . $override->getInventoryStatus());
                 return new ResolvedInventory(
                     $override->getInventoryStatus(),
                     $override->getQuantity(),
@@ -98,7 +95,6 @@ class CustomerGroupInventoryProvider
             }
         }
 
-        error_log('CustomerGroupInventoryProvider: Using default inventory');
         // Fallback to default product inventory
         return $this->getDefaultInventory($product);
     }

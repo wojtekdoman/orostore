@@ -4,6 +4,7 @@ namespace Acme\Bundle\CustomerGroupInventoryBundle\Twig;
 
 use Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider;
 use Oro\Bundle\ProductBundle\Entity\Product;
+use Doctrine\Persistence\ManagerRegistry;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -13,7 +14,8 @@ use Twig\TwigFunction;
 class CustomerGroupInventoryExtension extends AbstractExtension
 {
     public function __construct(
-        private CustomerGroupInventoryProvider $inventoryProvider
+        private CustomerGroupInventoryProvider $inventoryProvider,
+        private ManagerRegistry $doctrine
     ) {}
 
     public function getFunctions(): array
@@ -22,6 +24,7 @@ class CustomerGroupInventoryExtension extends AbstractExtension
             new TwigFunction('acme_cg_inventory_status', [$this, 'getInventoryStatus']),
             new TwigFunction('acme_cg_inventory_label', [$this, 'getInventoryLabel']),
             new TwigFunction('acme_cg_inventory_is_available', [$this, 'isAvailable']),
+            new TwigFunction('acme_cg_inventory_debug', [$this, 'getDebugInfo']),
         ];
     }
 
@@ -30,22 +33,75 @@ class CustomerGroupInventoryExtension extends AbstractExtension
      */
     public function getInventoryStatus($product): string
     {
-        // Handle case where product is passed as array
-        if (is_array($product)) {
-            if (isset($product['product']) && $product['product'] instanceof Product) {
-                $product = $product['product'];
-            } else {
-                // Return default status if we can't get the product object
-                return 'in_stock';
-            }
-        }
+        $productEntity = $this->resolveProductEntity($product);
         
-        if (!$product instanceof Product) {
+        if (!$productEntity) {
+            // If we have an array with inventory_status field, use it as fallback
+            if (is_array($product) && isset($product['inventory_status'])) {
+                return $product['inventory_status'];
+            }
             return 'in_stock';
         }
         
-        $inventory = $this->inventoryProvider->getResolvedInventory($product);
+        $inventory = $this->inventoryProvider->getResolvedInventory($productEntity);
         return $inventory->status;
+    }
+    
+    /**
+     * Resolve product entity from various input formats
+     */
+    private function resolveProductEntity($product): ?Product
+    {
+        // If it's already a Product entity
+        if ($product instanceof Product) {
+            return $product;
+        }
+        
+        // Handle array format
+        if (is_array($product)) {
+            // Try to get embedded product object
+            if (isset($product['product']) && $product['product'] instanceof Product) {
+                return $product['product'];
+            }
+            
+            // Try to load by ID if we have it
+            if (isset($product['id'])) {
+                $productRepo = $this->doctrine->getRepository(Product::class);
+                $productEntity = $productRepo->find($product['id']);
+                if ($productEntity instanceof Product) {
+                    return $productEntity;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Get debug info for current context
+     */
+    public function getDebugInfo($product): string
+    {
+        $productEntity = $this->resolveProductEntity($product);
+        
+        if (!$productEntity) {
+            if (is_array($product)) {
+                return sprintf('Product is array with ID: %s, keys: %s', 
+                    $product['id'] ?? 'NO ID',
+                    implode(', ', array_slice(array_keys($product), 0, 5))
+                );
+            }
+            return sprintf('Not a Product instance: %s', gettype($product));
+        }
+        
+        $inventory = $this->inventoryProvider->getResolvedInventory($productEntity);
+        return sprintf(
+            'Group: %s, Overridden: %s, Status: %s, Product ID: %s',
+            $inventory->groupName ?: 'NONE',
+            $inventory->overriddenByGroup ? 'YES' : 'NO',
+            $inventory->status,
+            $productEntity->getId()
+        );
     }
 
     /**
@@ -69,20 +125,14 @@ class CustomerGroupInventoryExtension extends AbstractExtension
      */
     public function isAvailable($product): bool
     {
-        // Handle case where product is passed as array
-        if (is_array($product)) {
-            if (isset($product['product']) && $product['product'] instanceof Product) {
-                $product = $product['product'];
-            } else {
-                return true;
-            }
-        }
+        $productEntity = $this->resolveProductEntity($product);
         
-        if (!$product instanceof Product) {
+        if (!$productEntity) {
+            // Default to available if we can't resolve the product
             return true;
         }
         
-        $inventory = $this->inventoryProvider->getResolvedInventory($product);
+        $inventory = $this->inventoryProvider->getResolvedInventory($productEntity);
         return $inventory->isAvailable();
     }
 }
