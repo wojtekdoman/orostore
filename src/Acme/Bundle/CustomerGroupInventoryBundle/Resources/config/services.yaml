@@ -79,3 +79,12 @@ services:
             - '@doctrine'
         tags:
             - { name: twig.extension }
+    
+    # Shopping list datagrid listener
+    Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListDatagridListener:
+        arguments:
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+            - '@doctrine'
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.before, method: onBuildBefore }
+            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.after, method: onResultAfter }

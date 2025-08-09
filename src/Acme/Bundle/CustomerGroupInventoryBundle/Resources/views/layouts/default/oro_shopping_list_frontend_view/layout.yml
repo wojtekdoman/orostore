@@ -2,12 +2,3 @@ layout:
     actions:
         - '@setBlockTheme':
             themes: '@AcmeCustomerGroupInventory/layouts/default/oro_shopping_list_frontend_view/customer_group_inventory.html.twig'
-        
-        # Add inventory status to shopping list items
-        - '@add':
-            id: acme_cg_inventory_shopping_list
-            parentId: shopping_list_line_items_list
-            blockType: block
-            options:
-                vars:
-                    shopping_list_products: '=data["oro_shopping_list_products"].getProducts(data["shoppingList"])'

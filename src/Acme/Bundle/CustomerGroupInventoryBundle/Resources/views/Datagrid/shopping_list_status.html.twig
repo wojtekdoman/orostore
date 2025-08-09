@@ -1,0 +1,19 @@
+{% set status = record.getValue('inventory_status') %}
+{% set label = record.getValue('inventory_label') %}
+{% set overridden = record.getValue('inventory_overridden') %}
+
+{% if status %}
+    <div class="inventory-status-cell">
+        {% if status == 'in_stock' %}
+            <span class="badge badge--success badge--xs">{{ label|trans }}</span>
+        {% elseif status == 'out_of_stock' %}
+            <span class="badge badge--danger badge--xs">{{ label|trans }}</span>
+        {% elseif status == 'backorder' %}
+            <span class="badge badge--warning badge--xs">{{ label|trans }}</span>
+        {% elseif status == 'pre_order' %}
+            <span class="badge badge--info badge--xs">{{ label|trans }}</span>
+        {% else %}
+            <span class="badge badge--xs">{{ label|trans }}</span>
+        {% endif %}
+    </div>
+{% endif %}
