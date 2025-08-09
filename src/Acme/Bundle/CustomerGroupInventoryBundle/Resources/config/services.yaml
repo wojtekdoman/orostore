@@ -45,6 +45,7 @@ services:
         arguments:
             - '@doctrine'
             - '@oro_security.token_accessor'
+            - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
         tags: ['controller.service_arguments']
         public: true
         calls:

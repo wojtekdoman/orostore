@@ -1,0 +1,27 @@
+{% block _acme_cg_inventory_checkout_validator_widget %}
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/messenger'], function($, messenger) {
+            $(document).ready(function() {
+                // Check inventory status for each checkout item
+                $('.checkout-order-summary__item').each(function() {
+                    var $item = $(this);
+                    var productId = $item.data('product-id');
+                    var inventoryStatus = $item.data('inventory-status');
+                    
+                    if (inventoryStatus === 'out_of_stock') {
+                        // Add warning badge
+                        var $warning = $('<div class="alert alert--warning alert--compact">' +
+                            '<i class="fa fa-exclamation-triangle"></i> ' +
+                            '{{ "This item is out of stock for your customer group"|trans }}' +
+                            '</div>');
+                        $item.find('.checkout-order-summary__item-title').after($warning);
+                        
+                        // Show notification
+                        messenger.notificationFlashMessage('warning', 
+                            '{{ "Some items in your cart are out of stock"|trans }}');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

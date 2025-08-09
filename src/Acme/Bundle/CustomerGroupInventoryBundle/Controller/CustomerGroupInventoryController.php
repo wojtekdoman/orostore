@@ -13,7 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider;
+use Oro\Bundle\ProductBundle\Entity\Product;
 
 /**
  * CRUD controller for Customer Group Inventory management
@@ -23,7 +26,8 @@ class CustomerGroupInventoryController extends AbstractController
 {
     public function __construct(
         private ManagerRegistry $doctrine,
-        private TokenAccessorInterface $tokenAccessor
+        private TokenAccessorInterface $tokenAccessor,
+        private ?CustomerGroupInventoryProvider $inventoryProvider = null
     ) {}
 
     #[Route(path: '/', name: 'acme_cg_inventory_index')]
@@ -108,5 +112,46 @@ class CustomerGroupInventoryController extends AbstractController
             'entity' => $entity,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * AJAX endpoint to check inventory status for a product SKU
+     */
+    #[Route(path: '/check', name: 'acme_customer_group_inventory_check', methods: ['GET'])]
+    public function checkInventoryAction(Request $request): JsonResponse
+    {
+        $sku = $request->query->get('sku');
+        if (!$sku) {
+            return new JsonResponse(['error' => 'SKU is required'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Find product by SKU
+        $productRepo = $this->doctrine->getRepository(Product::class);
+        $product = $productRepo->findOneBySku($sku);
+        
+        if (!$product) {
+            return new JsonResponse(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Get inventory status for current customer group
+        if ($this->inventoryProvider) {
+            $inventory = $this->inventoryProvider->getResolvedInventory($product);
+            
+            return new JsonResponse([
+                'sku' => $sku,
+                'status' => $inventory->status,
+                'quantity' => $inventory->quantity,
+                'is_available' => $inventory->isAvailable(),
+                'overridden_by_group' => $inventory->overriddenByGroup,
+                'group_name' => $inventory->groupName
+            ]);
+        }
+
+        // Fallback if provider not available
+        return new JsonResponse([
+            'sku' => $sku,
+            'status' => 'in_stock',
+            'is_available' => true
+        ]);
     }
 }

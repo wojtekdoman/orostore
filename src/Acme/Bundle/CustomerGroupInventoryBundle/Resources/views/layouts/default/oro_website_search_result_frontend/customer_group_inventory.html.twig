@@ -1,0 +1,50 @@
+{% block _acme_cg_inventory_search_filter_widget %}
+    {% if block.vars.show_inventory_filter|default(false) %}
+        <div class="filter-item">
+            <div class="filter-item__title">{{ 'Availability'|trans }}</div>
+            <div class="filter-item__content">
+                <label class="checkbox-label">
+                    <input type="checkbox" 
+                           class="filter-inventory-status" 
+                           data-status="in_stock"
+                           checked>
+                    <span>{{ 'In Stock Only'|trans }}</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" 
+                           class="filter-inventory-status" 
+                           data-status="include_backorder">
+                    <span>{{ 'Include Backorder'|trans }}</span>
+                </label>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            require(['jquery'], function($) {
+                $(document).on('change', '.filter-inventory-status', function() {
+                    var showInStock = $('[data-status="in_stock"]').is(':checked');
+                    var includeBackorder = $('[data-status="include_backorder"]').is(':checked');
+                    
+                    // Filter search results based on inventory status
+                    $('.product-item').each(function() {
+                        var $item = $(this);
+                        var status = $item.data('inventory-status');
+                        
+                        var shouldShow = false;
+                        if (status === 'in_stock') {
+                            shouldShow = showInStock;
+                        } else if (status === 'backorder' || status === 'pre_order') {
+                            shouldShow = includeBackorder;
+                        }
+                        
+                        $item.toggle(shouldShow);
+                    });
+                    
+                    // Update results count
+                    var visibleCount = $('.product-item:visible').length;
+                    $('.search-results-count').text(visibleCount + ' {{ "results"|trans }}');
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}

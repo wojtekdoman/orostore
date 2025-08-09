@@ -1,0 +1,16 @@
+layout:
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeCustomerGroupInventory/layouts/default/imports/oro_product_grid/customer_group_inventory.html.twig'
+        
+        # This will apply to all product grids including related products
+        - '@add':
+            id: __acme_cg_inventory_grid_status
+            parentId: __product_item_primary_content
+            siblingId: __product_item_primary_content_first_line
+            prepend: false
+            blockType: block
+            options:
+                vars:
+                    product: '=product'
+                    inventory: '=data["acme_cg_inventory"].getForProduct(product)'

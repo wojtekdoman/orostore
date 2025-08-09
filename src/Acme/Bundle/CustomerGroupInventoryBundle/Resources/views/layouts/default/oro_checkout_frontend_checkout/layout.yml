@@ -1,0 +1,13 @@
+layout:
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeCustomerGroupInventory/layouts/default/oro_checkout_frontend_checkout/customer_group_inventory.html.twig'
+        
+        # Add inventory status check to checkout items
+        - '@add':
+            id: acme_cg_inventory_checkout_validator
+            parentId: checkout_order_summary_items_container
+            blockType: block
+            options:
+                vars:
+                    checkout: '=data["checkout"]'

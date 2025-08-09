@@ -1,0 +1,22 @@
+{% block ___acme_cg_inventory_grid_status_widget %}
+    {% set inventory = block.vars.inventory|default(null) %}
+    {% if inventory %}
+        <div class="product-item__inventory-badge">
+            {% if inventory.status == 'in_stock' %}
+                <span class="badge badge--success badge--xs">{{ 'In Stock'|trans }}</span>
+            {% elseif inventory.status == 'out_of_stock' %}
+                <span class="badge badge--danger badge--xs">{{ 'Out of Stock'|trans }}</span>
+            {% elseif inventory.status == 'backorder' %}
+                <span class="badge badge--warning badge--xs">{{ 'Backorder'|trans }}</span>
+            {% elseif inventory.status == 'pre_order' %}
+                <span class="badge badge--info badge--xs">{{ 'Pre-order'|trans }}</span>
+            {% endif %}
+            
+            {% if inventory.overriddenByGroup %}
+                <span class="badge badge--secondary badge--xs" title="{{ 'Price for your group'|trans }}">
+                    <i class="fa fa-users"></i>
+                </span>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+layout:
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeCustomerGroupInventory/layouts/default/oro_website_search_result_frontend/customer_group_inventory.html.twig'
+        
+        # Search results use the same product grid/list imports
+        # So our imports will automatically apply here too
+        # But we can add additional search-specific features
+        - '@add':
+            id: acme_cg_inventory_search_filter
+            parentId: product_search_results_filters
+            blockType: block
+            options:
+                vars:
+                    show_inventory_filter: true

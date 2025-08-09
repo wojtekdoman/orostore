@@ -1,0 +1,55 @@
+{% block _acme_cg_inventory_quick_order_validator_widget %}
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/messenger'], function($, messenger) {
+            // Hook into quick order form autocomplete
+            $(document).on('autocomplete:productSelected', function(e, productData) {
+                if (productData && productData.sku) {
+                    // Make AJAX call to check inventory for customer group
+                    $.ajax({
+                        url: '{{ path("acme_customer_group_inventory_check") }}',
+                        data: { sku: productData.sku },
+                        success: function(response) {
+                            if (response.status === 'out_of_stock') {
+                                // Show warning next to product
+                                var $row = $('[data-sku="' + productData.sku + '"]').closest('.quick-order-form__row');
+                                if ($row.length) {
+                                    var $warning = $('<span class="badge badge--danger badge--xs ml-2">' +
+                                        '{{ "Out of Stock"|trans }}</span>');
+                                    $row.find('.product-name').append($warning);
+                                    
+                                    messenger.notificationFlashMessage('warning',
+                                        '{{ "Product %sku% is out of stock for your group"|trans }}'
+                                        .replace('%sku%', productData.sku));
+                                }
+                            } else if (response.status === 'backorder') {
+                                var $row = $('[data-sku="' + productData.sku + '"]').closest('.quick-order-form__row');
+                                if ($row.length) {
+                                    var $warning = $('<span class="badge badge--warning badge--xs ml-2">' +
+                                        '{{ "Backorder"|trans }}</span>');
+                                    $row.find('.product-name').append($warning);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // Validate on form submit
+            $(document).on('submit', '.quick-order-form', function(e) {
+                var hasOutOfStock = false;
+                $(this).find('.badge--danger').each(function() {
+                    if ($(this).text().indexOf('Out of Stock') !== -1) {
+                        hasOutOfStock = true;
+                    }
+                });
+                
+                if (hasOutOfStock) {
+                    if (!confirm('{{ "Some products are out of stock. Continue anyway?"|trans }}')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

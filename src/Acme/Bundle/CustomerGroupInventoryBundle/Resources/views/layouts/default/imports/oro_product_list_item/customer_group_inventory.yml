@@ -1,0 +1,26 @@
+layout:
+    actions:
+        - '@setBlockTheme':
+            themes: '@AcmeCustomerGroupInventory/layouts/default/imports/oro_product_list_item/customer_group_inventory.html.twig'
+        
+        # Remove default inventory status from product list items
+        - '@remove':
+            id: __product_inventory_status_label
+            
+        # Add our custom inventory status for list items
+        - '@add':
+            id: __acme_cg_inventory_status
+            parentId: __product_sku_container
+            blockType: container
+            options:
+                attr:
+                    class: 'product-item__inventory-status'
+                    
+        - '@add':
+            id: __acme_cg_inventory_status_label
+            parentId: __acme_cg_inventory_status
+            blockType: block
+            options:
+                vars:
+                    product: '=product'
+                    inventory: '=data["acme_cg_inventory"].getForProduct(product)'
