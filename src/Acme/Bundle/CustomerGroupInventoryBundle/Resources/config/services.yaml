@@ -80,11 +80,19 @@ services:
         tags:
             - { name: twig.extension }
     
-    # Shopping list datagrid listener
-    Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListDatagridListener:
+    # Layout Data Provider for Related Products
+    Acme\Bundle\CustomerGroupInventoryBundle\Layout\DataProvider\RelatedProductsInventoryProvider:
         arguments:
             - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
             - '@doctrine'
         tags:
-            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.before, method: onBuildBefore }
-            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.after, method: onResultAfter }
+            - { name: layout.data_provider, alias: acme_related_products_inventory }
+    
+    # Shopping list datagrid listener - DISABLED due to hanging issue
+    # Acme\Bundle\CustomerGroupInventoryBundle\EventListener\ShoppingListDatagridListener:
+    #     arguments:
+    #         - '@Acme\Bundle\CustomerGroupInventoryBundle\Provider\CustomerGroupInventoryProvider'
+    #         - '@doctrine'
+    #     tags:
+    #         - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.before, method: onBuildBefore }
+    #         - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.after, method: onResultAfter }

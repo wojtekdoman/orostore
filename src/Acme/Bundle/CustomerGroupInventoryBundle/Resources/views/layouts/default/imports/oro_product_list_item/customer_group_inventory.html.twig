@@ -1,11 +1,32 @@
 {% block __oro_product_list_item__acme_cg_inventory_status_label_widget %}
-    {# Product can be an object or an array depending on context #}
-    {% if product is defined %}
+    {# Product can be an object or an array, or we might have 'item' instead of 'product' #}
+    {% set productData = product|default(item|default(null)) %}
+    
+    {# For related products, check if product has id property even if it looks empty #}
+    {% if productData and productData.id is defined %}
+        {# Product is an object with properties, build array from it #}
+        {% set productData = {
+            'id': productData.id,
+            'sku': productData.sku|default(sku|default('')),
+            'name': productData.name|default(name|default('')),
+            'inventory_status': inventory_status|default('in_stock')
+        } %}
+    {% elseif productData is iterable and productData is empty and product.id is defined %}
+        {# Product object appears empty but has properties #}
+        {% set productData = {
+            'id': product.id,
+            'sku': product.sku|default(sku|default('')),
+            'name': product.name|default(name|default('')),
+            'inventory_status': inventory_status|default('in_stock')
+        } %}
+    {% endif %}
+    
+    {% if productData %}
         {# Check if we can get inventory status #}
-        {% if product is iterable and product.product is defined %}
-            {% set actualProduct = product.product %}
+        {% if productData is iterable and productData.product is defined %}
+            {% set actualProduct = productData.product %}
         {% else %}
-            {% set actualProduct = product %}
+            {% set actualProduct = productData %}
         {% endif %}
         
         {% if actualProduct %}
